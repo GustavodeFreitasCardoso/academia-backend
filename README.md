@@ -56,10 +56,11 @@ Ao executar, o cenário demonstrativo realiza o fluxo completo:
 4. Remove o observador de notificação e realiza um terceiro check-in (o observador removido não é avisado).
 5. Consulta os check-ins registrados e o total contabilizado pelo observador de estatísticas.
 
-Saída aproximada (os IDs e horários variam a cada execução):
+Exemplo de saída (IDs abreviados; IDs e horários variam a cada execução):
 
 ```text
-[CLIENT] Aluna cadastrada: Ana Souza (ID: <uuid>)
+[CLIENT] Aluna cadastrada: Ana Souza (ID: 028c2b6a-e130-4c08-9f4f-4da92ece5f49)
+
 [CLIENT] Plano 'Treino A' criado para Ana Souza.
 [CLIENT] Frequência: 3 dias por semana.
          - Agachamento livre (PERNAS): 3 séries de 12 repetições
@@ -67,13 +68,19 @@ Saída aproximada (os IDs e horários variam a cada execução):
          - Remada baixa (COSTAS): 3 séries de 12 repetições
 
 [CLIENT] Realizando dois check-ins para demonstrar o Observer...
-[AUDITORIA] Check-in <uuid> registrado para o aluno <uuid> em <horário>.
-[NOTIFICACAO] O aluno <uuid> realizou um check-in.
-[ESTATISTICA] Total de check-ins do aluno <uuid>: 1.
-...
+[AUDITORIA] Check-in 9bf4cd33-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.582142900Z.
+[ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 1.
+[NOTIFICACAO] O aluno 028c2b6a-... realizou um check-in.
+[AUDITORIA] Check-in 8685521b-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.584143Z.
+[ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 2.
+[NOTIFICACAO] O aluno 028c2b6a-... realizou um check-in.
+
 [CLIENT] Removendo o observador de notificação e fazendo um terceiro check-in...
-[AUDITORIA] ...
-[ESTATISTICA] Total de check-ins do aluno <uuid>: 3.
+[AUDITORIA] Check-in 2a90600a-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.585146700Z.
+[ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 3.
+
+[CLIENT] Check-ins registrados: 3
+[CLIENT] Total contabilizado pelo observador de estatísticas: 3
 ```
 
 ## Padrões de projeto
