@@ -85,8 +85,8 @@ O `build()` rejeita planos inválidos (frequência fora de 1 a 7 ou sem exercíc
 
 ## Contribuição individual
 
-| Integrante | Contribuição |
+| Integrante 
 |---|---|
-| Gustavo de Freitas Cardoso | A definir |
-| Gustavo Luís da Silva | A definir |
-| João Miguel Fortunato Rita | A definir |
+| Gustavo de Freitas Cardoso |
+| Gustavo Luís da Silva |
+| João Miguel Fortunato Rita |
