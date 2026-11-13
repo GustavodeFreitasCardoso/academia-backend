@@ -1,171 +1,92 @@
 # Sistema de Academia — Backend Java
 
-Projeto de console desenvolvido em Java 21 e Spring Boot para o Trabalho Final de Design Patterns (Parte 1), tema **Academia**. O foco são os padrões **Builder** e **Observer**.
-
-> O projeto não possui frontend nem API REST. Ao iniciar, a `AcademiaApplication` chama o `AcademiaClient`, que executa um cenário demonstrativo no console.
+Aplicação de console em Java 21 e Spring Boot para o Trabalho Final de Design Patterns (Parte 1), tema **Academia**. O foco são os padrões **Builder** e **Observer**.
 
 ## Descrição do sistema
 
-A aplicação gerencia, de forma simplificada, uma academia. As três entidades principais são:
+Gerenciamento simplificado de uma academia, com três entidades principais:
 
 | Entidade | Descrição |
 |---|---|
-| `Aluno` | Pessoa cadastrada na academia (pode estar ativa ou inativa). |
-| `PlanoTreino` | Plano de treino de um aluno: nome, objetivo, frequência semanal, exercícios e observações. |
-| `CheckIn` | Registro de presença do aluno na academia, com data e hora. |
+| `Aluno` | Pessoa cadastrada na academia (ativa ou inativa). |
+| `PlanoTreino` | Plano de treino do aluno: nome, objetivo, frequência semanal, exercícios e observações. |
+| `CheckIn` | Registro de presença do aluno, com data e hora. |
 
-`Exercicio` e `GrupoMuscular` são apenas apoio ao plano de treino (objeto de valor e enum).
-
-Os dados ficam **somente em memória** (não há banco de dados) e são perdidos ao encerrar a aplicação.
+Os dados ficam apenas em memória (sem banco de dados). Ao iniciar, a `AcademiaApplication` executa um cenário de demonstração no console (`AcademiaClient`).
 
 ## Tecnologias e pré-requisitos
 
-- Java (JDK) 21
+- Java (JDK) 21 ou superior
 - Maven 3.6.3 ou superior
-- Spring Boot, usado apenas para injeção de dependências e inicialização
-- JUnit 5 para testes
+- Spring Boot e JUnit 5
 
 ## Como executar
 
-Na raiz do projeto:
-
 ```bash
-mvn spring-boot:run
-```
-
-Para executar os testes:
-
-```bash
-mvn test
-```
-
-Para gerar e executar o JAR:
-
-```bash
-mvn clean package
-java -jar target/academia-backend-0.0.1-SNAPSHOT.jar
+mvn spring-boot:run   # executa a demonstração
+mvn test              # executa os testes
 ```
 
 ## Exemplo de utilização
 
-Ao executar, o cenário demonstrativo realiza o fluxo completo:
-
-1. Cadastra uma aluna (`Ana Souza`).
-2. Cria um plano de treino usando `PlanoTreino.builder(...)`.
-3. Realiza dois check-ins. Os três observadores reagem a cada um.
-4. Remove o observador de notificação e realiza um terceiro check-in (o observador removido não é avisado).
-5. Consulta os check-ins registrados e o total contabilizado pelo observador de estatísticas.
-
-Exemplo de saída (IDs abreviados; IDs e horários variam a cada execução):
+O cenário de demonstração cadastra uma aluna, cria um plano com o Builder, faz dois check-ins (os três observadores reagem), remove um observador e faz um terceiro check-in.
 
 ```text
-[CLIENT] Aluna cadastrada: Ana Souza (ID: 028c2b6a-e130-4c08-9f4f-4da92ece5f49)
-
 [CLIENT] Plano 'Treino A' criado para Ana Souza.
-[CLIENT] Frequência: 3 dias por semana.
-         - Agachamento livre (PERNAS): 3 séries de 12 repetições
-         - Supino com halteres (PEITO): 3 séries de 10 repetições
-         - Remada baixa (COSTAS): 3 séries de 12 repetições
-
 [CLIENT] Realizando dois check-ins para demonstrar o Observer...
-[AUDITORIA] Check-in 9bf4cd33-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.582142900Z.
+[AUDITORIA] Check-in 9bf4cd33-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03Z.
 [ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 1.
 [NOTIFICACAO] O aluno 028c2b6a-... realizou um check-in.
-[AUDITORIA] Check-in 8685521b-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.584143Z.
-[ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 2.
-[NOTIFICACAO] O aluno 028c2b6a-... realizou um check-in.
-
+...
 [CLIENT] Removendo o observador de notificação e fazendo um terceiro check-in...
-[AUDITORIA] Check-in 2a90600a-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03.585146700Z.
+[AUDITORIA] Check-in 2a90600a-... registrado para o aluno 028c2b6a-... em 2026-11-12T02:13:03Z.
 [ESTATISTICA] Total de check-ins do aluno 028c2b6a-...: 3.
-
 [CLIENT] Check-ins registrados: 3
-[CLIENT] Total contabilizado pelo observador de estatísticas: 3
 ```
 
 ## Padrões de projeto
 
 ### Builder
 
-**Problema que resolve:** um plano de treino tem vários atributos, alguns obrigatórios (aluno, nome, objetivo) e outros opcionais (frequência, exercícios, observações). Sem o Builder, seria necessário um construtor com muitos parâmetros, fácil de errar a ordem, ou vários construtores diferentes. O Builder permite montar o objeto passo a passo, com nomes de métodos claros, e validar tudo antes de criar o plano.
+**Problema que resolve:** o plano de treino tem atributos obrigatórios (aluno, nome, objetivo) e opcionais (frequência, exercícios, observações). Sem o Builder, seriam necessários um construtor longo ou vários construtores. O Builder monta o plano passo a passo e valida tudo antes de criá-lo.
 
-**Classes envolvidas:**
-
-- `PlanoTreino`: produto final, imutável, com construtor privado.
-- `PlanoTreino.Builder`: classe interna que recebe os dados obrigatórios, configura os opcionais de forma encadeada e valida no `build()`.
-- `Exercicio` e `GrupoMuscular`: dados usados na montagem do plano.
-- `AcademiaClient`: usa o Builder no cenário de demonstração.
-
-**Como funciona:**
+**Classes envolvidas:** `PlanoTreino` (produto imutável), `PlanoTreino.Builder`, `Exercicio`, `GrupoMuscular` e `AcademiaClient` (uso).
 
 ```java
 PlanoTreino plano = PlanoTreino.builder(aluno.id(), "Treino A", "Condicionamento físico")
         .frequenciaSemanal(3)
         .adicionarExercicio(new Exercicio("Agachamento livre", GrupoMuscular.PERNAS, 3, 12))
-        .observacoes("Priorizar a execução correta dos movimentos.")
         .build();
 ```
 
-O `build()` rejeita planos inválidos (frequência fora de 1 a 7 ou nenhum exercício). A lista de exercícios é copiada com `List.copyOf`, então o plano não muda depois de criado.
+O `build()` rejeita planos inválidos (frequência fora de 1 a 7 ou sem exercícios).
 
 ### Observer
 
-**Problema que resolve:** quando um aluno faz check-in, vários comportamentos precisam reagir (auditoria, notificação, estatística). Sem o Observer, o `CheckInService` precisaria conhecer e chamar cada um deles, e cada novo comportamento exigiria alterar o serviço. Com o Observer, o serviço apenas avisa quem estiver inscrito.
+**Problema que resolve:** ao fazer check-in, vários comportamentos precisam reagir (auditoria, notificação, estatística). Sem o Observer, o `CheckInService` teria de conhecer cada um deles. Com o Observer, ele apenas avisa quem estiver inscrito, e novos comportamentos não exigem alterar o serviço.
 
 **Classes envolvidas:**
+- `CheckInService`: *Subject*; possui `registrarObserver`, `removerObserver` e notifica após salvar o check-in.
+- `CheckInObserver`: interface dos observadores.
+- `AuditoriaFrequenciaObserver`, `NotificacaoObserver`, `EstatisticaFrequenciaObserver`: observadores concretos.
+- `CheckIn`: evento enviado aos observadores.
 
-- `CheckInService`: o **Subject** (observável). Mantém a lista de observadores, permite `registrarObserver` e `removerObserver` e notifica todos após salvar o check-in.
-- `CheckInObserver`: a interface (contrato) dos observadores, com o método `aoRealizarCheckIn(CheckIn)`.
-- `AuditoriaFrequenciaObserver`: registra a ocorrência no console.
-- `NotificacaoObserver`: simula uma notificação no console.
-- `EstatisticaFrequenciaObserver`: contabiliza os check-ins por aluno.
-- `CheckIn`: o evento enviado aos observadores.
+## Possíveis extensões futuras
 
-**Como funciona:** o Spring injeta no `CheckInService` todos os componentes que implementam `CheckInObserver`, e o serviço também permite registrar e remover observadores em tempo de execução. O check-in é salvo antes da notificação, e uma falha em um observador é registrada em log sem impedir os demais.
-
-Para adicionar um novo comportamento, basta criar uma classe que implemente `CheckInObserver`. O `CheckInService` não precisa ser modificado (princípio Open/Closed).
-
-## Organização dos pacotes
-
-```text
-com.academia.backend
-├── AcademiaApplication.java
-├── client/        AcademiaClient
-├── model/         Aluno, CheckIn, Exercicio, PlanoTreino, enums/GrupoMuscular
-├── observer/      CheckInObserver, impl/ (Auditoria, Notificacao, Estatistica)
-├── repository/    interfaces e memory/ (implementações em memória)
-└── service/       AlunoService, CheckInService, PlanoTreinoService
-```
-
-## Testes
-
-- `PlanoTreinoBuilderTest`: valores padrão, imutabilidade da lista e validações do Builder.
-- `CheckInServiceTest`: notificação dos observadores, falha isolada de um observador e registro/remoção de observadores.
-
-## Decisões e limites desta versão
-
-- Não há API REST, banco de dados, autenticação, matrícula ou cobrança.
-- O client contém dados de demonstração; ele não é uma interface de produção.
-- As notificações são simuladas pelo console.
-- O "Plano" do projeto é um plano de treino do aluno.
+- Plano de assinatura (preço, duração e benefícios), reaproveitando o Builder.
+- Novos observers, como alerta de meta semanal ou envio de e-mail/SMS.
+- Persistência em banco de dados, API REST e interface web.
 
 ## Declaração de utilização de IA
 
 - **Modelo utilizado:** Claude (Anthropic), Claude Sonnet 5.5.
-- **Partes com auxílio da IA:**
-  - Análise e diagnóstico do repositório em relação aos requisitos do professor.
-  - Adição de `registrarObserver` e `removerObserver` no `CheckInService`, com testes e ajuste do cenário de demonstração.
-  - Correção do `pom.xml` (versão do Java).
-  - Redação deste README.
-  - _(Equipe: complementar aqui qualquer outra parte da implementação inicial que tenha recebido auxílio de IA.)_
-- Todo o código foi revisado e testado pela equipe.
+- **Partes com auxílio da IA:** análise do repositório em relação aos requisitos; implementação de `registrarObserver`/`removerObserver` com testes e ajuste da demonstração; correção do `pom.xml`; redação do README.
+- *(Equipe: complementar com outras partes que tenham recebido auxílio de IA.)*
 
 ## Contribuição individual
 
-> A definir pela equipe.
-
 | Integrante | Contribuição |
 |---|---|
-| _Nome do integrante 1_ | _a preencher_ |
-| _Nome do integrante 2_ | _a preencher_ |
-| _Nome do integrante 3_ | _a preencher_ |
+| Gustavo de Freitas Cardoso | A definir |
+| Gustavo Luís da Silva | A definir |
+| João Miguel Fortunato Rita | A definir |
