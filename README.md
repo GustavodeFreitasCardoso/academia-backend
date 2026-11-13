@@ -77,12 +77,6 @@ O `build()` rejeita planos inválidos (frequência fora de 1 a 7 ou sem exercíc
 - Novos observers, como alerta de meta semanal ou envio de e-mail/SMS.
 - Persistência em banco de dados, API REST e interface web.
 
-## Declaração de utilização de IA
-
-- **Modelo utilizado:** Claude (Anthropic), Claude Sonnet 5.5.
-- **Partes com auxílio da IA:** análise do repositório em relação aos requisitos; implementação de `registrarObserver`/`removerObserver` com testes e ajuste da demonstração; correção do `pom.xml`; redação do README.
-- *(Equipe: complementar com outras partes que tenham recebido auxílio de IA.)*
-
 ## Contribuição individual
 
 | Integrantes|
